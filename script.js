@@ -1,6 +1,8 @@
 class RockPaperScissors {
     constructor() {
       this.choices = ['rock', 'paper', 'scissors'];
+      this.playerScore = 0;
+      this.computerScore = 0;
     }
   
     getComputerChoice() {
@@ -10,10 +12,10 @@ class RockPaperScissors {
   
     getPlayerChoice() {
       while (true) {
-        let choice = prompt('Rock, Paper, or Scissors?', 'Rock').toLowerCase();
+        let choice = prompt('Rock, Paper, or Scissors?', 'Rock');
         if (choice === null || choice === '') {
           alert('Please enter a valid choice.');
-        } else if (this.choices.includes(choice)) {
+        } else if (choice = choice.toLowerCase(), this.choices.includes(choice)) {
           return choice;
         } else {
           alert('Invalid input! Please enter either Rock, Paper, or Scissors.');
@@ -39,10 +41,39 @@ class RockPaperScissors {
       const computerSelection = this.getComputerChoice();
       const playerSelection = this.getPlayerChoice();
       const result = this.playRound(playerSelection, computerSelection);
-      console.log(result);
+      return result;
+    }
+
+    game() {
+        for (let i = 0 ; i < 5 ; i++) {
+            console.log(`Round ${i + 1}:-`);
+            let result = this.playGame();
+            console.log(result);
+            if (result.includes('win')) {
+                this.playerScore++;
+            }
+            else {
+                this.computerScore++;
+            }
+        }
+        
+        console.log('---------------');
+        console.log('Game Over');
+        console.log(`Player Score: ${this.playerScore}`);
+        console.log(`Computer Score: ${this.computerScore}`);
+
+        if (this.playerScore > this.computerScore) {
+            console.log('You win the game!');
+        } else if (this.playerScore < this.computerScore) {
+            console.log('You lose the game!');
+        } else {
+            console.log("It's a tie!");
+        }
+
+
     }
   }
   
-  const game = new RockPaperScissors();
-  game.playGame();
+const startGame = new RockPaperScissors();
+startGame.game();
   
