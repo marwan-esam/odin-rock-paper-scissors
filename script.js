@@ -3,6 +3,8 @@ class RockPaperScissors {
       this.choices = ['rock', 'paper', 'scissors'];
       this.playerScore = 0;
       this.computerScore = 0;
+      this.scoreText = '';
+      this.winner = {player: 'unknown', score: 0};
     }
   
     getComputerChoice() {
@@ -25,16 +27,32 @@ class RockPaperScissors {
   
     playRound(playerSelection, computerSelection) {
       if (playerSelection === computerSelection) {
-        return `It's a tie. You both played ${playerSelection}.`;
+        this.playerScore++;
+        this.computerScore++;
+        // return `It's a tie. You both played ${playerSelection}.`;
+        this.scoreText = `It's a tie! You both played ${playerSelection}.`;
       } else if (
         (playerSelection === 'rock' && computerSelection === 'paper') ||
         (playerSelection === 'paper' && computerSelection === 'scissors') ||
         (playerSelection === 'scissors' && computerSelection === 'rock')
       ) {
-        return `You lose! ${computerSelection} beats ${playerSelection}.`;
+        this.computerScore++;
+        // return `You lose! ${computerSelection} beats ${playerSelection}.`;
+        this.scoreText = `You lose! ${computerSelection} beats ${playerSelection}.`;
       } else {
-        return `You win! ${playerSelection} beats ${computerSelection}.`;
+        this.playerScore++;
+        // return `You win! ${playerSelection} beats ${computerSelection}.`;
+        this.scoreText = `You win! ${playerSelection} beats ${computerSelection}.`;
       }
+      if(this.playerScore > this.computerScore){
+        this.winner.player = 'you';
+        this.winner.score = this.playerScore;
+      }
+      else{
+        this.winner.player = 'computer';
+        this.winner.score = this.computerScore;
+      }
+      return this.scoreText;
     }
   
     playGame() {
@@ -42,6 +60,13 @@ class RockPaperScissors {
       const playerSelection = this.getPlayerChoice();
       const result = this.playRound(playerSelection, computerSelection);
       return result;
+    }
+
+    clear() {
+      this.playerScore = 0;
+      this.computerScore = 0;
+      this.scoreText = '';
+      this.winner = {player: 'unknown', score: 0};
     }
 
     game() {
@@ -74,6 +99,66 @@ class RockPaperScissors {
     }
   }
   
-const startGame = new RockPaperScissors();
-startGame.game();
-  
+
+
+
+
+const game = new RockPaperScissors();
+const gameRounds = 5;
+let isGameOver = false;
+const images = document.querySelectorAll('img');
+
+images.forEach((image) => image.addEventListener('click', playRound));
+
+
+const gameRule = document.querySelector('.game-rule');
+const scoreText = document.querySelector('.score-text');
+const winner = document.querySelector('.winner');
+const playAgain = document.querySelector('.play-again');
+const playAgainButton = document.createElement('button');
+playAgainButton.classList.add('play-again-button');
+playAgainButton.textContent = 'play again';
+
+gameRule.textContent = `First to ${gameRounds} wins!`;
+
+
+const scoreBoard = document.querySelector('.score-board');
+scoreBoard.textContent = '0 - 0';
+
+
+
+function playRound () {
+  if(isGameOver){
+    return;
+  }
+  const playerChoice = this.alt;
+  const computerChoice = game.getComputerChoice();
+  scoreText.textContent = game.playRound(playerChoice, computerChoice);
+  scoreBoard.textContent = `${game.playerScore} - ${game.computerScore}`;
+  if(game.winner.score === 5){
+    isGameOver = true;
+    // function removeAnimation (e) {
+    //   if(e.propertyName != 'transform') return;
+    //   this.classList.remove('playing');
+    // }
+    // images.forEach((image) => image.addEventListener('transitionend', removeAnimation));
+    images.forEach(function (image) {image.classList.remove('playing')});
+    winner.textContent = game.winner.player === 'you' ? "You won the game! you're good at this." : "You lost the game! better luck next time."
+    playAgain.appendChild(playAgainButton);
+  }
+}
+
+function pressPlayAgain(){
+  game.clear();
+  winner.textContent = '';
+  scoreText.textContent = '';
+  scoreBoard.textContent = '0 - 0';
+  playAgain.removeChild(playAgainButton);
+  images.forEach((image) => image.classList.add('playing'));
+  isGameOver = false;
+}
+
+playAgainButton.addEventListener('click', pressPlayAgain);
+
+
+
