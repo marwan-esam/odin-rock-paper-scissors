@@ -4,7 +4,6 @@ class RockPaperScissors {
       this.playerScore = 0;
       this.computerScore = 0;
       this.scoreText = '';
-      this.winner = {player: 'unknown', score: 0};
     }
   
     getComputerChoice() {
@@ -43,14 +42,6 @@ class RockPaperScissors {
         this.playerScore++;
         // return `You win! ${playerSelection} beats ${computerSelection}.`;
         this.scoreText = `You win! ${playerSelection} beats ${computerSelection}.`;
-      }
-      if(this.playerScore > this.computerScore){
-        this.winner.player = 'you';
-        this.winner.score = this.playerScore;
-      }
-      else{
-        this.winner.player = 'computer';
-        this.winner.score = this.computerScore;
       }
       return this.scoreText;
     }
@@ -135,15 +126,16 @@ function playRound () {
   const computerChoice = game.getComputerChoice();
   scoreText.textContent = game.playRound(playerChoice, computerChoice);
   scoreBoard.textContent = `${game.playerScore} - ${game.computerScore}`;
-  if(game.winner.score === 5){
+  if(game.playerScore === 5 || game.computerScore === 5){
     isGameOver = true;
-    // function removeAnimation (e) {
-    //   if(e.propertyName != 'transform') return;
-    //   this.classList.remove('playing');
-    // }
-    // images.forEach((image) => image.addEventListener('transitionend', removeAnimation));
     images.forEach(function (image) {image.classList.remove('playing')});
-    winner.textContent = game.winner.player === 'you' ? "You won the game! you're good at this." : "You lost the game! better luck next time."
+    if(game.playerScore > game.computerScore){
+      winner.textContent = "You won the game! You're good at this.";
+    } else if(game.playerScore < game.computerScore){
+      winner.textContent = "You lost the game! Better luck next time.";
+    } else{
+      winner.textContent = "Tie game! You both held your ground. Ready for a rematch?";
+    }
     playAgain.appendChild(playAgainButton);
   }
 }
